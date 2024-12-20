@@ -28,29 +28,11 @@ def show_request_params(request):
     return HttpResponse(response_content)
 
 
-def register(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            # Создаем нового пользователя
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
+def is_login(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
 
-            user = User.objects.create_user(username=username, email=email, password=password)
-
-            # Сообщение об успешной регистрации
-            messages.success(request, "Регистрация прошла успешно! Теперь вы можете войти в систему.")
-
-            # Перенаправление на страницу входа
-            return redirect('login')
-        else:
-            # Если форма невалидна, отображаем ошибки
-            messages.error(request, "В вашей форме произошла ошибка. Пожалуйста, попробуйте еще раз.")
-    else:
-        form = RegistrationForm()
-
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'login.html')
 
 
 def login_view(request):
@@ -58,21 +40,16 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Проверка аутентификации (упрощенная)
         if username == 'admin' and password == 'password':
-            # Перенаправляем на страницу профиля
             return HttpResponseRedirect(reverse('profile'))
         else:
-            # Перенаправляем на страницу входа с ошибкой
             return HttpResponseRedirect(reverse('login') + '?error=1')
 
     return render(request, 'login.html')
 
 
 def profile_view(request):
-    # Страница профиля доступна только для авторизованных пользователей
     if not request.user.is_authenticated:
-        # Перенаправление на страницу входа, если пользователь не авторизован
         return HttpResponseRedirect(reverse('login'))
 
     return render(request, 'profile.html')
