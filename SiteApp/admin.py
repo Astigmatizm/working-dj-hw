@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+# username = admin1
+# user_email = admin@dj.kz
+# user_password = 12345

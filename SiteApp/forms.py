@@ -1,18 +1,7 @@
 from django import forms
-from django.contrib.auth.models import User
 
-class RegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirmation = forms.CharField(widget=forms.PasswordInput)
 
-    class Meta:
-        model = User
-        fields = ['username', 'email']
+class LoginUserForm(forms.Form):
+    username = forms.CharField(label="Логин", widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
-    def clean_password_confirmation(self):
-        password = self.cleaned_data.get('password')
-        password_confirmation = self.cleaned_data.get('password_confirmation')
-
-        if password != password_confirmation:
-            raise forms.ValidationError("Passwords do not match!")
-        return password_confirmation
