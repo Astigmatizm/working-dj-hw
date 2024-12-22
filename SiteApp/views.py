@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import LoginUserForm
@@ -28,5 +29,15 @@ def login_user(request):
     else:
         form = LoginUserForm()
     return render(request, 'main/login.html', {'form': form})
+
+
+
+
+
+def send_squares(request):
+    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    squares = [x**2 for x in numbers]
+    return JsonResponse({'squares': squares})
+
 
 
