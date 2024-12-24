@@ -7,6 +7,8 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('profile/', views.profile, name='profile'),
 
+    path('form/', views.form_view, name='form_view'),
+
     path('records/', views.all_records, name='all_records'),
     path('records/<int:id>/', views.record_detail, name='record_detail'),
 
