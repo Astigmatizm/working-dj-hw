@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Record
 
@@ -54,10 +54,25 @@ def form_view(request):
     if request.method == 'POST':
         form = UserDataForm(request.POST)
         if form.is_valid():
-            form.save()     # Если форма прошла валидацию, сохраняем данные в базу
-            return render(request, 'main/formа.html', {'form': form, 'success': True})     # Перенаправляем на другую страницу с успешным сообщением
+            # Если форма прошла валидацию, сохраняем данные в базу
+            form.save()
+            # Перенаправляем на другую страницу с успешным сообщением
+            return render(request, 'main/forma.html', {'form': form, 'success': True})
         else:
-            return render(request, 'main/formа.html', {'form': form, 'error': 'Ошибка валидации данных'})     # Если форма невалидна, возвращаем ошибку
+            # Если форма невалидна, возвращаем ошибку
+            return render(request, 'main/forma.html', {'form': form, 'error': 'Ошибка валидации данных'})
 
-    form = UserDataForm()       # Если форма не отправлена, показываем пустую форму
-    return render(request, 'main/formа.html', {'form': form})
+    # Если форма не отправлена, показываем пустую форму
+    form = UserDataForm()
+    return render(request, 'main/forma.html', {'form': form})
+
+
+def user_info(request):
+    if request.user.is_authenticated:
+        user_data = f'Пользователь: {request.user.username}\n'
+        user_data += f'Полное имя: {request.user.get_full_name()}\n'
+        user_data += f'Email: {request.user.email}\n'
+        user_data += f'Группы: {", ".join([group.name for group in request.user.groups.all()])}\n'
+        return HttpResponse(user_data)
+    else:
+        return HttpResponse('Пользователь не авторизован.')
