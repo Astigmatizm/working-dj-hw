@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .models import Record
+from .models import Record, Blog
 
 
 from django.http import HttpResponseRedirect
@@ -76,3 +76,8 @@ def user_info(request):
         return HttpResponse(user_data)
     else:
         return HttpResponse('Пользователь не авторизован.')
+
+
+def blog_list(request):
+    blogs = Blog.objects.prefetch_related('tags').all()
+    return render(request, 'main/blog_list.html', {'blogs': blogs})

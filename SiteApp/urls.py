@@ -15,5 +15,7 @@ urlpatterns = [
     path('records/', views.all_records, name='all_records'),
     path('records/<int:id>/', views.record_detail, name='record_detail'),
 
+    path('blogs/', views.blog_list, name='blog_list'),
+
     # path('send_squares/', views.send_squares, name='send_squares'),
 ]
