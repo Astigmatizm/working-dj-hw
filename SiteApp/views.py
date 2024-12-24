@@ -4,7 +4,7 @@ from .models import Record
 
 
 from django.http import HttpResponseRedirect
-from .forms import LoginUserForm, MyForm
+from .forms import LoginUserForm, MyForm, UserDataForm
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 
@@ -52,10 +52,12 @@ def all_records(request):
 
 def form_view(request):
     if request.method == 'POST':
-        form = MyForm(request.POST)
+        form = UserDataForm(request.POST)
         if form.is_valid():
-            return render(request, 'main/forma.html', {'form': form, 'success': True}) # Если форма валидна, выводим успешный результат
+            form.save()     # Если форма прошла валидацию, сохраняем данные в базу
+            return render(request, 'main/formа.html', {'form': form, 'success': True})     # Перенаправляем на другую страницу с успешным сообщением
         else:
-            return render(request, 'main/forma.html', {'form': form, 'error': 'Ошибка валидации данных'}) # Если форма невалидна, выводим ошибки
-    form = MyForm() # Если форма еще не отправлена, просто отобразим пустую форму
-    return render(request, 'main/forma.html', {'form': form})
+            return render(request, 'main/formа.html', {'form': form, 'error': 'Ошибка валидации данных'})     # Если форма невалидна, возвращаем ошибку
+
+    form = UserDataForm()       # Если форма не отправлена, показываем пустую форму
+    return render(request, 'main/formа.html', {'form': form})
