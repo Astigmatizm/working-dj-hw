@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'SiteApp.apps.SiteappConfig',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LOGIN_URL = '/login/'
+
+RECAPTCHA_PUBLIC_KEY = '6LdEl6UqAAAAAK_Lng2KlX_0euIxy5fHma8sEpXC'
+RECAPTCHA_PRIVATE_KEY = '6LdEl6UqAAAAAN-qn--c00qDD85LAO2Ai9kJHsC2'

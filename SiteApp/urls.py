@@ -11,6 +11,7 @@ urlpatterns = [
     path('records/<int:id>/', views.record_detail, name='record_detail'),
 
     path('manage_transaction/', views.manage_transaction, name='manage_transaction'),
+    path('form/', views.handle_form, name='handle_form'),
 
     path('create/', views.create_ice_cream, name='create_ice_cream'),
     path('list/', views.ice_cream_list, name='ice_cream_list'),

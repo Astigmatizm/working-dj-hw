@@ -3,8 +3,8 @@ from .models import User
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Record, IceCream
-from .forms import IceCreamForm, LoginUserForm
+from .models import Record, IceCream, User
+from .forms import IceCreamForm, LoginUserForm, CustomForm
 
 
 from django.http import HttpResponseRedirect
@@ -92,3 +92,24 @@ def manage_transaction(request):
             return HttpResponse(f"Ошибка: {e}. Выполняем откат транзакции.")
 
     return render(request, 'main/manage_transaction.html')
+
+
+def handle_form(request):
+    if request.method == 'POST':
+        form = CustomForm(request.POST)
+        if form.is_valid():
+
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+
+            user = User(name=name, email=email)
+            user.save()
+
+            return HttpResponse("Данные успешно сохранены в базе данных.")
+        else:
+            return HttpResponse("Ошибка: данные формы некорректны.")
+
+    else:
+        form = CustomForm()
+
+    return render(request, 'main/form_template.html', {'form': form})
