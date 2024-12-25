@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загруженные файлы</title>
+</head>
+<body>
+    <h1>Загруженные файлы</h1>
+
+    <ul>
+        {% for document in documents %}
+            <li>
+                <a href="{{ document.file.url }}">{{ document.title }}</a> (Uploaded on: {{ document.uploaded_at }})
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

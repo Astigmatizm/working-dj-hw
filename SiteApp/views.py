@@ -1,11 +1,10 @@
 from django.db import transaction
-from .models import User
+from .models import User, Document
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Record, IceCream, User
-from .forms import IceCreamForm, LoginUserForm, CustomForm
-
+from .forms import IceCreamForm, LoginUserForm, CustomForm, DocumentForm
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -113,3 +112,19 @@ def handle_form(request):
         form = CustomForm()
 
     return render(request, 'main/form_template.html', {'form': form})
+
+
+def upload_document(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()  # Сохраняем загруженный файл в базе данных
+            return redirect('document_list')  # Перенаправляем на страницу со списком документов
+    else:
+        form = DocumentForm()
+    return render(request, 'main/upload_document.html', {'form': form})
+
+
+def document_list(request):
+    documents = Document.objects.all()  # Получаем все документы
+    return render(request, 'main/document_list.html', {'documents': documents})

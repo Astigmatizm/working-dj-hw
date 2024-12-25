@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -131,3 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RECAPTCHA_PUBLIC_KEY = '6LdEl6UqAAAAAK_Lng2KlX_0euIxy5fHma8sEpXC'
 RECAPTCHA_PRIVATE_KEY = '6LdEl6UqAAAAAN-qn--c00qDD85LAO2Ai9kJHsC2'
+
+MEDIA_URL = '/media/'  # URL для доступа к файлам
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Путь на сервере для хранения медиа файлов

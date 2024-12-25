@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -17,4 +19,10 @@ urlpatterns = [
     path('list/', views.ice_cream_list, name='ice_cream_list'),
 
     path('send_squares/', views.send_squares, name='send_squares'),
+
+    path('upload/', views.upload_document, name='upload_document'),
+    path('documents/', views.document_list, name='document_list')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
