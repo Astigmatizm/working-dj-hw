@@ -1,10 +1,13 @@
+from django.db import transaction
+from .models import User
+from django.http import HttpResponse
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from .models import Record
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Record, IceCream
+from .forms import IceCreamForm, LoginUserForm
 
 
 from django.http import HttpResponseRedirect
-from .forms import LoginUserForm
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 
@@ -41,12 +44,51 @@ def send_squares(request):
 
 
 def record_detail(request, id):
-    # Получаем одну запись по id
     record = get_object_or_404(Record, pk=id)
     return render(request, 'main/record_detail.html', {'record': record})
 
 
 def all_records(request):
-    # Получаем все записи
     records = Record.objects.all()
+
     return render(request, 'main/all_records.html', {'records': records})
+
+
+def create_ice_cream(request):
+    if request.method == 'POST':
+        form = IceCreamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ice_cream_list')
+    else:
+        form = IceCreamForm()
+
+    return render(request, 'main/create_ice_cream.html', {'form': form})
+
+
+def ice_cream_list(request):
+    ice_creams = IceCream.objects.all()
+    return render(request, 'main/ice_cream_list.html', {'ice_creams': ice_creams})
+
+
+def manage_transaction(request):
+    if request.method == 'POST':
+        # Начинаем транзакцию
+        try:
+            with transaction.atomic():
+                # Создаем записи с использованием метода .create()
+                User.objects.create(name='Alice')
+                User.objects.create(name='Bob')
+
+                # Логика для отмены транзакции
+                user_choice = request.POST.get('action')
+                if user_choice == 'rollback':
+                    raise Exception("Транзакция отменена пользователем.")
+
+                # Подтверждаем транзакцию
+                return HttpResponse("Транзакция завершена успешно.")
+
+        except Exception as e:
+            return HttpResponse(f"Ошибка: {e}. Выполняем откат транзакции.")
+
+    return render(request, 'main/manage_transaction.html')

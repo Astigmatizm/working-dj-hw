@@ -1,0 +1,6 @@
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="action" value="rollback">Отменить транзакцию</button>
+    <button type="submit" name="action" value="commit">Подтвердить транзакцию</button>
+</form>
