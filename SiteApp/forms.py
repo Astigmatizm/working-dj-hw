@@ -1,7 +1,7 @@
 from django import forms
-from .models import Record, IceCream, Document
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
+from .models import Record, IceCream, ImageModel
 
 
 class LoginUserForm(forms.Form):
@@ -28,7 +28,13 @@ class CustomForm(forms.Form):
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
 
-class DocumentForm(forms.ModelForm):
+# class DocumentForm(forms.ModelForm):
+#     class Meta:
+#         model = Document
+#         fields = ['title', 'file']
+
+
+class ImageForm(forms.ModelForm):
     class Meta:
-        model = Document
-        fields = ['title', 'file']
+        model = ImageModel
+        fields = ['image']

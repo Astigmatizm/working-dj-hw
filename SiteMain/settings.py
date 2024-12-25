@@ -134,3 +134,4 @@ RECAPTCHA_PRIVATE_KEY = '6LdEl6UqAAAAAN-qn--c00qDD85LAO2Ai9kJHsC2'
 
 MEDIA_URL = '/media/'  # URL для доступа к файлам
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Путь на сервере для хранения медиа файлов
+

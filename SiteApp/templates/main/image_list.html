@@ -1,0 +1,10 @@
+<ul>
+    {% for image in images %}
+        <li>
+            <img src="{{ image.image.url }}" alt="Image">
+            {% if image.thumbnail %}
+                <img src="{{ image.thumbnail.url }}" alt="Thumbnail">
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

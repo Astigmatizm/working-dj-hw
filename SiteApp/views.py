@@ -1,10 +1,13 @@
+import os
+
+from PIL.Image import Image
 from django.db import transaction
-from .models import User, Document
+# from .models import User, Document
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Record, IceCream, User
-from .forms import IceCreamForm, LoginUserForm, CustomForm, DocumentForm
+from .models import Record, IceCream, User, ImageModel
+from .forms import IceCreamForm, LoginUserForm, CustomForm, ImageForm
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -72,14 +75,11 @@ def ice_cream_list(request):
 
 def manage_transaction(request):
     if request.method == 'POST':
-        # Начинаем транзакцию
         try:
             with transaction.atomic():
-                # Создаем записи с использованием метода .create()
                 User.objects.create(name='Alice')
                 User.objects.create(name='Bob')
 
-                # Логика для отмены транзакции
                 user_choice = request.POST.get('action')
                 if user_choice == 'rollback':
                     raise Exception("Транзакция отменена пользователем.")
@@ -114,17 +114,41 @@ def handle_form(request):
     return render(request, 'main/form_template.html', {'form': form})
 
 
-def upload_document(request):
+# def upload_document(request):
+#     if request.method == 'POST':
+#         form = DocumentForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('document_list')
+#     else:
+#         form = DocumentForm()
+#     return render(request, 'main/upload_document.html', {'form': form})
+#
+#
+# def document_list(request):
+#     documents = Document.objects.all()
+#     return render(request, 'main/document_list.html', {'documents': documents})
+
+
+def create_thumbnail(original_file_path, thumbnail_path):
+    with Image.open(original_file_path) as img:
+        img.thumbnail((200, 200))  # Устанавливаем размер миниатюры
+        img.save(thumbnail_path)   # Сохраняем миниатюру
+
+
+def upload_image(request):
     if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
+        form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()  # Сохраняем загруженный файл в базе данных
-            return redirect('document_list')  # Перенаправляем на страницу со списком документов
+            form.save()
+            return redirect('image_list')
     else:
-        form = DocumentForm()
-    return render(request, 'main/upload_document.html', {'form': form})
+        form = ImageForm()
+
+    return render(request, 'main/upload_image.html', {'form': form})
 
 
-def document_list(request):
-    documents = Document.objects.all()  # Получаем все документы
-    return render(request, 'main/document_list.html', {'documents': documents})
+def image_list(request):
+    images = ImageModel.objects.all()
+    return render(request, 'main/image_list.html', {'images': images})
+
