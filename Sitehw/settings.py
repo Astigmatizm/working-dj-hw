@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-2onz1v++sg^ufvo*zqhvt$s2*63y#nw_tes31w1**4jbuw6k02
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -134,3 +134,29 @@ EMAIL_USE_TLS = True  # Используем TLS
 EMAIL_HOST_USER = ''  # Ваш email
 EMAIL_HOST_PASSWORD = ''  # Ваш пароль
 DEFAULT_FROM_EMAIL = ''  # Email отправителя
+
+
+SECURE_SSL_REDIRECT = False  # Убедитесь, что это выключено для разработки
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+import os
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django_errors.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
