@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.messages',
 ]
 
 ROOT_URLCONF = 'SiteMain.urls'
@@ -133,4 +134,7 @@ RECAPTCHA_PUBLIC_KEY = '6LdEl6UqAAAAAK_Lng2KlX_0euIxy5fHma8sEpXC'
 RECAPTCHA_PRIVATE_KEY = '6LdEl6UqAAAAAN-qn--c00qDD85LAO2Ai9kJHsC2'
 
 MEDIA_URL = '/media/'  # URL для доступа к файлам
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Путь на сервере для хранения медиа файлов
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Путь на сервере для хранения медиа файлов
+
+# Настройка обработки сообщений
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

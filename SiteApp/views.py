@@ -1,15 +1,16 @@
+from .models import Record, IceCream, User, Document
+from .forms import IceCreamForm, LoginUserForm, CustomForm, DocumentForm
+
+from django.core.signing import Signer, BadSignature
 from django.db import transaction
-from .models import User, Document
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Record, IceCream, User
-from .forms import IceCreamForm, LoginUserForm, CustomForm, DocumentForm
-from django.contrib.auth.models import Group, User
-
 from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.contrib.auth.models import Group, User
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 
 def index(request):
@@ -127,20 +128,16 @@ def upload_document(request):
 
 
 def document_list(request):
-    documents = Document.objects.all()  # Получаем все документы
+    documents = Document.objects.all()
     return render(request, 'main/document_list.html', {'documents': documents})
 
 
 def create_group_and_add_users(request):
-    # Создание новой группы (если она еще не существует)
     group_name = "New Group"
     group, created = Group.objects.get_or_create(name=group_name)
 
-    # Добавление пользователей в группу
-    # Для примера, добавим всех пользователей с username 'user1' и 'user2'
     users_to_add = User.objects.filter(username__in=['user1', 'user2'])
 
-    # Добавление пользователей в группу
     for user in users_to_add:
         group.user_set.add(user)
 
@@ -148,20 +145,35 @@ def create_group_and_add_users(request):
 
 
 def view_groups(request):
-    # Получаем текущего пользователя
     user = request.user
 
-    # Получаем список групп текущего пользователя
     user_groups = user.groups.all()
 
-    # Преобразуем группы в список имен
     group_names = [group.name for group in user_groups]
 
-    # Передаем данные в контекст
     context = {
-        'user_groups': group_names,  # Данные о группах пользователя
-        'user': user,  # Дополнительная информация о пользователе (опционально)
+        'user_groups': group_names,
+        'user': user,
     }
 
-    # Возвращаем ответ с контекстом
     return render(request, 'main/groups.html', context)
+
+
+def sign_data(request):
+    signer = Signer()
+    data_to_sign = "data_to_sign"
+    signed_data = signer.sign(data_to_sign)
+    verify_url = reverse('verify_data') + f'?signed_data={signed_data}'
+    return HttpResponse(
+        f"Подписанные данные: {signed_data}. Перейдите по <a href='{verify_url}'>этой ссылке</a> для проверки.")
+
+
+def verify_data(request):
+    signer = Signer()
+    signed_data = request.GET.get('signed_data', '')
+
+    try:
+        original_data = signer.unsign(signed_data)
+        return HttpResponse(f"Проверка успешна! Исходные данные: {original_data}")
+    except BadSignature:
+        return HttpResponse("Подпись неверна!")

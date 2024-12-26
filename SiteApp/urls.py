@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+# from .views import sign_data
 
 urlpatterns = [
 
@@ -26,6 +27,9 @@ urlpatterns = [
 
     path('groups/',  views.view_groups, name='view_groups'),
     path('create-group/', views.create_group_and_add_users, name='create_group_and_add_users'),
+
+    path('sign-data/', views.sign_data, name='sign_data'),
+    path('verify-data/', views.verify_data, name='verify_data'),
 ]
 
 if settings.DEBUG:
