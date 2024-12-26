@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Record, IceCream, User
 from .forms import IceCreamForm, LoginUserForm, CustomForm, DocumentForm
+from django.contrib.auth.models import Group, User
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -128,3 +129,39 @@ def upload_document(request):
 def document_list(request):
     documents = Document.objects.all()  # Получаем все документы
     return render(request, 'main/document_list.html', {'documents': documents})
+
+
+def create_group_and_add_users(request):
+    # Создание новой группы (если она еще не существует)
+    group_name = "New Group"
+    group, created = Group.objects.get_or_create(name=group_name)
+
+    # Добавление пользователей в группу
+    # Для примера, добавим всех пользователей с username 'user1' и 'user2'
+    users_to_add = User.objects.filter(username__in=['user1', 'user2'])
+
+    # Добавление пользователей в группу
+    for user in users_to_add:
+        group.user_set.add(user)
+
+    return HttpResponse(f'Группа "{group_name}" создана и пользователи добавлены!')
+
+
+def view_groups(request):
+    # Получаем текущего пользователя
+    user = request.user
+
+    # Получаем список групп текущего пользователя
+    user_groups = user.groups.all()
+
+    # Преобразуем группы в список имен
+    group_names = [group.name for group in user_groups]
+
+    # Передаем данные в контекст
+    context = {
+        'user_groups': group_names,  # Данные о группах пользователя
+        'user': user,  # Дополнительная информация о пользователе (опционально)
+    }
+
+    # Возвращаем ответ с контекстом
+    return render(request, 'main/groups.html', context)

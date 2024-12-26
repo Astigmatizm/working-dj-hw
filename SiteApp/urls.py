@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
 
     path('', views.index, name='home'),
@@ -21,7 +22,10 @@ urlpatterns = [
     path('send_squares/', views.send_squares, name='send_squares'),
 
     path('upload/', views.upload_document, name='upload_document'),
-    path('documents/', views.document_list, name='document_list')
+    path('documents/', views.document_list, name='document_list'),
+
+    path('groups/',  views.view_groups, name='view_groups'),
+    path('create-group/', views.create_group_and_add_users, name='create_group_and_add_users'),
 ]
 
 if settings.DEBUG:
