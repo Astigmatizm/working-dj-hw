@@ -1,0 +1,14 @@
+<form action="{% url 'user-detail' %}" method="get">
+    <label for="username">Введите имя пользователя:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Найти</button>
+</form>
+{% if user %}
+    <h1>Информация о пользователе</h1>
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Дата регистрации: {{ user.date_joined }}</p>
+{% else %}
+    <p>Пользователь не найден.</p>
+{% endif %}
+
